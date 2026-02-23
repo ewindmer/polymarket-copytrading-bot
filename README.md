@@ -1,7 +1,8 @@
 # Polymarket CopyTrading Bot | Polymarket Copy Trading Bot
 
-A Node.js bot that **copies trades** from a target Polymarket user to your own wallet. It monitors the target’s activity on [Polymarket](https://polymarket.com) (including weather and other prediction markets), stores new trades in MongoDB, and mirrors them on your proxy wallet with size scaled by your balance ratio.
-It enables on **Weather**, **Sports**, **Politics**, **Crypto**
+- A Node.js bot that **copies trades** from a target Polymarket user to your own wallet. It monitors the target’s activity on [Polymarket](https://polymarket.com) (including weather and other prediction markets), stores new trades in MongoDB, and mirrors them on your proxy wallet with size scaled by your balance ratio.
+It enables on **Weather**, **Sports**, **Politics**, **Crypto** markets
+
 ---
 
 ## What it does
