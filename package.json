@@ -1,5 +1,5 @@
 {
-    "name": "polymarket_arbitrage_bot",
+    "name": "polymarke_copytrading_bot-weather-market",
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
