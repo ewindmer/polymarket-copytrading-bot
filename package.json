@@ -1,5 +1,5 @@
 {
-    "name": "polymarke_copytrading_bot-ewindmer-market",
+    "name": "polymarket_copytrading_bot_crypto",
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
@@ -15,7 +15,7 @@
     "author": "ewindmer",
     "license": "ISC",
     "type": "commonjs",
-    "description": "",
+    "description": "A specialized Polymarket Copy Trading bot designed to replicate the trades of Anjun, a top-tier Polymarket trader.",
     "devDependencies": {
         "@eslint/js": "^9.19.0",
         "@types/jest": "^29.5.14",
