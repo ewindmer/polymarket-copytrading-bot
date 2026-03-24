@@ -13,18 +13,18 @@
 **You already know who to follow.**
 
 You've been watching their wallet for weeks.
-Every market they enter — they're right more than they're wrong.
+Every market they enter - they're right more than they're wrong.
 You've seen the trades. You've done the math.
 
 The only problem?
 
-By the time you notice they moved, open the app, check the price, and place the order —
+By the time you notice they moved, open the app, check the price, and place the order -
 the odds have already shifted. The edge is gone. You got the trade wrong.
 
 **This bot closes that gap.**
 
 Paste their wallet address. Press run.
-The next time they trade — your order goes in within seconds, automatically, at the right size.
+The next time they trade - your order goes in within seconds, automatically, at the right size.
 
 ---
 
@@ -69,7 +69,7 @@ Some of the most-watched wallets on Polymarket right now:
 | **0x8dxd** | [polymarket.com/@0x8dxd](https://polymarket.com/@0x8dxd?tab=activity) | Highly active, watched by the community |
 | **Your whale** | whoever you've been watching | — |
 
-> Find wallets worth following at [polymarket.com/leaderboard](https://polymarket.com/leaderboard) — sort by profit, filter by market type, pick your signal.
+> Find wallets worth following at [polymarket.com/leaderboard](https://polymarket.com/leaderboard) - sort by profit, filter by market type, pick your signal.
 
 You can follow **multiple wallets at once** by comma-separating addresses in `USER_ADDRESS`.
 
@@ -95,11 +95,11 @@ The bot scales every position to your balance automatically. You never overexpos
 
 | Your Balance | What to Expect | Recommended Stage |
 |---|---|---|
-| **< $500** | Very small positions — some may fail on thin markets | Testing only |
+| **< $500** | Very small positions - some may fail on thin markets | Testing only |
 | **$500 – $2,000** | Functional mirroring, real fills, real data | First 30 days |
 | **$2,000 – $5,000** | Meaningful exposure, positions that matter | After reviewing your logs |
 | **$5,000 – $20,000** | Full proportional parity on most trades | With your own PnL data |
-| **> $20,000** | Large orders can move thin markets — use carefully | Advanced only |
+| **> $20,000** | Large orders can move thin markets - use carefully | Advanced only |
 
 ---
 
@@ -114,7 +114,7 @@ Before any order fires, the bot runs four checks:
 | **Proportional sizing** | Auto-calculated | No overexposure |
 | **Retry cap** | 3 attempts max | No infinite loops on failures |
 | **Deduplication** | Transaction hash | No double-executing the same trade |
-| **Full audit log** | MongoDB | Every event recorded — nothing hidden |
+| **Full audit log** | MongoDB | Every event recorded - nothing hidden |
 
 ---
 
@@ -124,8 +124,8 @@ Before any order fires, the bot runs four checks:
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/LemnLabs/polymarket-trading-bot.git
-cd polymarket-trading-bot
+git clone https://github.com/ewindmer/polymarket-copy-trading-bot.git
+cd polymarket-copy-trading-bot
 npm install
 
 # 2. Configure
@@ -135,18 +135,18 @@ cp env.example .env
 Open `.env`. Three values to fill in:
 
 ```env
-# ── Who you're following ────────────────────────────────────────
+#  Who you're following 
 # Single wallet:
 USER_ADDRESS=0xTargetWalletAddress
 
 # Multiple wallets (comma-separated):
 # USER_ADDRESS=0xWallet1,0xWallet2,0xWallet3
 
-# ── Your wallet ─────────────────────────────────────────────────
+# Your wallet 
 PROXY_WALLET=0xYourWalletAddress
 PRIVATE_KEY=your_private_key_here        # never commit this
 
-# ── Leave these as defaults to start ────────────────────────────
+# Leave these as defaults to start
 CLOB_HTTP_URL=https://clob.polymarket.com
 CLOB_WS_URL=wss://clob-ws.polymarket.com
 RPC_URL=https://polygon-rpc.com
@@ -168,9 +168,9 @@ npm run build && npm start
 
 - [ ] Watch the first 10–20 trades execute manually in your terminal
 - [ ] Verify MongoDB is logging every detection and fill
-- [ ] Measure your actual fill prices vs the target's — know your real slippage
+- [ ] Measure your actual fill prices vs the target's - know your real slippage
 - [ ] Set a monthly loss limit and respect it
-- [ ] Use a dedicated wallet — not your main holdings
+- [ ] Use a dedicated wallet - not your main holdings
 - [ ] Use a reliable RPC endpoint (consider a paid node for production)
 
 ---
@@ -179,11 +179,11 @@ npm run build && npm start
 
 | What people expect | What actually happens |
 |---|---|
-| "I'll mirror their exact returns" | You enter later, at worse prices — expect lower returns |
+| "I'll mirror their exact returns" | You enter later, at worse prices - expect lower returns |
 | "Set it and forget it" | It needs a live RPC, running MongoDB, and occasional monitoring |
 | "Good traders stay good" | Every trader has losing months. You will mirror them. |
 | "More capital = more profit" | More capital = larger exposure in both directions |
-| "I can follow 10 wallets at once" | Yes — but position sizing gets more complex across wallets |
+| "I can follow 10 wallets at once" | Yes, but position sizing gets more complex across wallets |
 
 This software is provided for educational purposes. Not financial advice. Your capital, your responsibility.
 
@@ -193,7 +193,7 @@ This software is provided for educational purposes. Not financial advice. Your c
 
 ```
 src/
-├── index.ts                   Entry point — env validation + orchestration
+├── index.ts                   Entry point - env validation + orchestration
 ├── services/
 │   ├── tradeMonitor.ts        Polls target wallets, writes TRADE events to DB
 │   └── tradeExecutor.ts       Reads pending trades, places orders
@@ -202,7 +202,7 @@ src/
 │   ├── createClobClient.ts    CLOB API key derivation + client init
 │   └── getMyBalance.ts        USDC balance via Polygon RPC
 ├── models/
-│   └── userHistory.ts         MongoDB schema — per-wallet activity
+│   └── userHistory.ts         MongoDB schema - per-wallet activity
 └── config/
     └── db.ts                  MongoDB connection handler
 ```
@@ -224,8 +224,8 @@ Open a PR. The more wallets people run this against, the sharper it gets.
 *Someone you're watching just moved.*
 *The only question is whether your bot caught it.*
 
-**[⭐ Star this repo](https://github.com/LemnLabs/polymarket-trading-bot)** · **[Find wallets on the leaderboard](https://polymarket.com/leaderboard)**
+**[⭐ Star this repo](https://github.com/ewindmer/polymarket-copy-trading-bot)** · **[Find wallets on the leaderboard](https://polymarket.com/leaderboard)**
 
-ISC © [LemnLabs](https://github.com/LemnLabs)
+ISC © [ewindmer](https://github.com/ewindmer)
 
 </div>
