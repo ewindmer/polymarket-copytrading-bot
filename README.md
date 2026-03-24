@@ -36,15 +36,15 @@ The bot watches any Polymarket wallet you point it at. The moment that wallet ex
 ```
 [02:13:44] Polling target wallet...          no new activity
 [02:13:45] Polling target wallet...          no new activity
-[02:13:46] Polling target wallet...          ── TRADE DETECTED ──
+[02:13:46] Polling target wallet...          ─ TRADE DETECTED ─
            Wallet   0xYourTargetWallet...
            Market   Will X happen before Y?
            Side     BUY
            Size     $8,500
            Price    0.44
 
-[02:13:46] Staleness check...                0s old — OK
-[02:13:46] Price drift check...              current 0.45 — within threshold
+[02:13:46] Staleness check...                0s old - OK
+[02:13:46] Price drift check...              current 0.45 - within threshold
 [02:13:46] Sizing your position...           $5,000 ÷ $85,000 × $8,500 = $500
 [02:13:47] Submitting order...               FILLED at 0.45
 [02:13:47] Writing to MongoDB...             done ✓
