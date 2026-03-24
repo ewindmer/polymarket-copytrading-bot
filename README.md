@@ -3,6 +3,7 @@
 [![Node](https://img.shields.io/badge/Node.js-18%2B-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Required-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://mongodb.com)
 [![Network](https://img.shields.io/badge/Polygon-USDC-8247E5?style=flat-square&logo=polygon&logoColor=white)](https://polygon.technology)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![License](https://img.shields.io/badge/License-ISC-blue?style=flat-square)](LICENSE)
 
 </div>
@@ -27,40 +28,63 @@ You woke up to a green position and a MongoDB log with 1 new entry.
 
 ---
 
-## The Trader
+## Why Car
 
-Car is one of Polymarket's most consistently profitable wallets. Not lucky — *consistent*. The kind of trader who shows up on leaderboards across political markets, sports, and macro events. High-conviction entries. Patient sizing.
+Car isn't a casual bettor. This is one of Polymarket's most studied wallets — consistently ranked in the top tier across political, sports, and macro event markets.
 
-The edge isn't secret. It's public, on-chain, observable.
-
-This bot observes it — and acts on it before you've even checked your phone.
+The edge is public, on-chain, and traceable. This bot converts it into executable signals before you've opened your laptop.
 
 | | |
 |---|---|
 | **Profile** | [Car on Polymarket](https://polymarket.com/@Car?tab=activity) |
 | **Wallet** | `0x7C3Db723F1D4d8cB9C550095203b686cB11E5C6B` |
 | **Network** | Polygon · USDC |
+| **Known for** | High-conviction entries, top leaderboard presence |
 
 ---
 
-## What Happens Every Second
+## What $5,000 Looks Like Running This Bot
 
-While you're working, sleeping, or not watching charts — this is running:
+> ⚠️ Illustrative only. Based on proportional sizing mechanics — not a performance guarantee. Fill in real numbers from your own run.
+
+Assume Car holds $50,000 USDC and you deploy $5,000.
+
+Your sizing ratio: **10%**. Every trade Car makes, you mirror at 10% of their size.
+
+| Car's Trade | Your Mirrored Position | At 65% win rate | At 55% win rate |
+|---|---|---|---|
+| $10,000 | $1,000 | +$650 avg | +$550 avg |
+| $5,000 | $500 | +$325 avg | +$275 avg |
+| $2,000 | $200 | +$130 avg | +$110 avg |
+
+*Win rate is Car's — your actual rate will be lower due to slippage and latency. This table exists to show the sizing mechanic, not to promise returns.*
+
+**The core math:** more capital deployed = larger absolute positions = larger absolute returns (and larger absolute losses). The bot handles sizing automatically. You control the starting balance.
+
+---
+
+## The Bot, Live
+
+While you're working, sleeping, or not watching charts:
 
 ```
-[03:47:01] Polling Car's wallet...          no new activity
-[03:47:02] Polling Car's wallet...          no new activity
-[03:47:03] Polling Car's wallet...          TRADE detected
-           Market    Will X happen by Y?
-           Side      BUY
-           Size      $4,200
-           Price     0.61
+[03:47:01] Polling Car's wallet...           no new activity
+[03:47:02] Polling Car's wallet...           no new activity
+[03:47:03] Polling Car's wallet...           ── TRADE DETECTED ──
+           Market   Will X happen before Y?
+           Side     BUY
+           Size     $4,200
+           Price    0.61
 
-[03:47:03] Validating event...              age OK (0s)
-[03:47:03] Checking price drift...          current 0.62 — within threshold
-[03:47:03] Scaling position...              your balance ÷ Car's balance × $4,200
-[03:47:04] Submitting order...              OK — filled at 0.62
-[03:47:04] Writing to MongoDB...            done
+[03:47:03] Staleness check...                0s old — OK
+[03:47:03] Price drift check...              current 0.62 — within 5% threshold
+[03:47:03] Sizing your position...           $5,000 ÷ $50,000 × $4,200 = $420
+[03:47:04] Submitting order...               FILLED at 0.62
+[03:47:04] Writing to MongoDB...             done ✓
+
+           Entry    0.62
+           Size     $420
+           P&L      open
 
 [03:47:04] Waiting for next signal...
 ```
@@ -69,37 +93,75 @@ That loop runs every second. Every hour. Every night you don't feel like watchin
 
 ---
 
-## The Setup
+## Capital Deployment Guide
 
-You don't need to understand prediction markets.  
-You don't need to track news cycles.  
-You need three things: a funded Polygon wallet, MongoDB, and 5 minutes.
+Not all capital is equal. Here's how to think about sizing before you start:
 
-### 1. Clone
+| Deployment Size | Behavior | Recommended for |
+|---|---|---|
+| **< $500** | Very small positions — fills may fail on low-liquidity markets | Testing and validation only |
+| **$500 – $2,000** | Functional mirroring — real fills, real data, manageable risk | First month of running |
+| **$2,000 – $5,000** | Meaningful exposure — positions large enough to matter | Confident after 30+ days of logs |
+| **$5,000 – $20,000** | Full proportional parity with Car on most trades | Experienced, with your own PnL data |
+| **> $20,000** | Liquidity risk increases — large orders can move thin markets | Advanced use only |
+
+**Rule of thumb:** only deploy what you'd be comfortable seeing go to zero in a bad month.
+
+---
+
+## Execution Guardrails
+
+The bot doesn't blindly chase every signal. Before any order is placed:
+
+| Guard | Threshold | What it prevents |
+|---|---|---|
+| **Staleness filter** | 24 hours | Acting on old, irrelevant data |
+| **Price drift gate** | 5% max deviation | Chasing already-moved markets |
+| **Proportional sizing** | Auto-calculated | Overexposure relative to your balance |
+| **Retry cap** | 3 attempts | Infinite loops on failed fills |
+| **Deduplication** | Transaction hash | Double-executing the same trade |
+| **Full audit log** | MongoDB | Every event recorded — nothing hidden |
+
+---
+
+## What Others Are Watching
+
+Car's wallet is one of the most observed on Polymarket. These are the kinds of markets where activity has been concentrated — publicly visible on their profile:
+
+- **US political events** — elections, appointments, policy outcomes
+- **Macro & economic** — Fed decisions, inflation prints, GDP calls
+- **Sports & entertainment** — high-liquidity, fast-resolving markets
+- **World events** — geopolitical outcomes with clear resolution criteria
+
+The bot doesn't filter by market type. It mirrors whatever Car trades, whenever they trade it.
+
+---
+
+## Five-Minute Setup
+
+**Prerequisites:** Node.js 18+, MongoDB (local or [Atlas free tier](https://mongodb.com/atlas)), funded Polygon wallet with USDC.
 
 ```bash
+# 1. Clone and install
 git clone https://github.com/LemnLabs/polymarket-trading-bot.git
 cd polymarket-trading-bot
 npm install
-```
 
-### 2. Configure
-
-```bash
+# 2. Configure
 cp env.example .env
 ```
 
-Open `.env`. Fill in exactly these:
+Open `.env` — fill in only three required values to start:
 
 ```env
-# The wallet you're following — already set to Car
+# ── Already set to Car — do not change ─────────────────────────
 USER_ADDRESS=0x7C3Db723F1D4d8cB9C550095203b686cB11E5C6B
 
-# Your wallet
+# ── Your wallet ─────────────────────────────────────────────────
 PROXY_WALLET=0xYourWalletAddress
-PRIVATE_KEY=your_private_key_here        # keep this private
+PRIVATE_KEY=your_private_key_here        # never commit this
 
-# Leave everything below as-is to start
+# ── Leave defaults unless you know what you're changing ─────────
 CLOB_HTTP_URL=https://clob.polymarket.com
 CLOB_WS_URL=wss://clob-ws.polymarket.com
 RPC_URL=https://polygon-rpc.com
@@ -110,39 +172,40 @@ TOO_OLD_TIMESTAMP=24
 RETRY_LIMIT=3
 ```
 
-### 3. Run
-
 ```bash
+# 3. Run
 npm run build && npm start
 ```
 
-The bot is now live. It will log every poll, every detection, every fill.
+---
+
+## Before You Scale Past $1,000
+
+Do these before increasing capital:
+
+- [ ] Watch the first 10–20 trades execute manually in your terminal
+- [ ] Verify MongoDB is logging every detection and fill correctly
+- [ ] Check your actual fill prices vs Car's — measure your real slippage
+- [ ] Set a monthly loss limit you will actually respect
+- [ ] Use a dedicated wallet — not your main holdings
+- [ ] Make sure your RPC endpoint is reliable (consider a paid node)
+
+This checklist exists because most people skip it. Don't skip it.
 
 ---
 
-## The Guardrails
+## The Honest Section
 
-The bot won't blindly chase every signal. Before placing any order it checks:
+Copy trading is not passive income. It is active risk with automated execution.
 
-| Check | What it does |
+| What people expect | What actually happens |
 |---|---|
-| **Staleness filter** | Ignores trades older than 24 hours — no acting on old data |
-| **Price drift gate** | Skips if the market has moved more than 5% from Car's fill |
-| **Proportional sizing** | Scales your position to your balance — no overexposure |
-| **Retry cap** | Attempts each order up to 3× before marking it as failed |
-| **Full audit log** | Every detection and execution written to MongoDB |
+| "I'll mirror Car's exact returns" | You enter later, at worse prices — returns will be lower |
+| "The bot runs itself" | It needs monitoring, a live RPC, and a running MongoDB |
+| "Profitable traders stay profitable" | Car will have losing months. You will mirror them. |
+| "More capital = more profit" | More capital = more exposure in both directions |
 
----
-
-## The Honest Part
-
-Copy trading is not a guarantee.
-
-Car takes losses. You will mirror some of them. Markets move between Car's fill and yours — sometimes in the wrong direction. RPC endpoints go down. APIs lag. Liquidity dries up.
-
-**Start small. Watch the first 20 trades manually. Then decide if you scale.**
-
-This software is for educational purposes. Not financial advice. Your capital, your responsibility.
+**None of this is financial advice. This software is provided for educational purposes. You are fully responsible for your own capital.**
 
 ---
 
@@ -150,27 +213,42 @@ This software is for educational purposes. Not financial advice. Your capital, y
 
 ```
 src/
-├── index.ts                  Entry point — env validation + orchestration
+├── index.ts                   Entry point — env validation + orchestration
 ├── services/
-│   ├── tradeMonitor.ts       Polls wallet activity, writes new trades to DB
-│   └── tradeExecutor.ts      Reads pending trades, executes orders
+│   ├── tradeMonitor.ts        Polls wallet, writes new TRADE events to DB
+│   └── tradeExecutor.ts       Reads pending trades, places orders
 ├── utils/
-│   ├── postOrder.ts          Buy / sell / merge order logic
-│   ├── createClobClient.ts   CLOB API key derivation + client init
-│   └── getMyBalance.ts       USDC balance read via Polygon RPC
+│   ├── postOrder.ts           Buy / sell / merge order logic
+│   ├── createClobClient.ts    CLOB API key derivation + client init
+│   └── getMyBalance.ts        USDC balance via Polygon RPC
 ├── models/
-│   └── userHistory.ts        MongoDB schema for per-wallet activity
+│   └── userHistory.ts         MongoDB schema — per-wallet activity
 └── config/
-    └── db.ts                 MongoDB connection
+    └── db.ts                  MongoDB connection handler
 ```
 
-Stack: TypeScript · Node.js · `@polymarket/clob-client` · `ethers` · `mongoose` · `axios`
+**Stack:** TypeScript (strict) · Node.js · `@polymarket/clob-client` · `ethers` · `mongoose` · `axios` · `ora` · `chalk`
+
+---
+
+## Commands
+
+```bash
+npm run dev          # Development — hot reload via ts-node
+npm run build        # Compile TypeScript → dist/
+npm start            # Run compiled build
+npm run lint         # ESLint check
+npm run lint:fix     # ESLint auto-fix
+npm run format       # Prettier format
+```
 
 ---
 
 ## Contributing
 
-If you've improved execution speed, sizing logic, or added PnL reporting — open a PR. The bot gets better when people who run it make it better.
+Run it. Log your results. Open a PR if you've improved execution speed, sizing logic, slippage measurement, or PnL reporting.
+
+The bot gets more useful the more people stress-test it with real capital.
 
 ---
 
