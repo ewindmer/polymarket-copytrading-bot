@@ -10,136 +10,117 @@
 
 ---
 
-**3:47am.**
+**You already know who to follow.**
 
-Car just moved on a market nobody was watching.
+You've been watching their wallet for weeks.
+Every market they enter — they're right more than they're wrong.
+You've seen the trades. You've done the math.
 
-Position sized heavy. Conviction trade. The kind that looks obvious in hindsight and invisible in the moment.
+The only problem?
 
-You were asleep.
+By the time you notice they moved, open the app, check the price, and place the order —
+the odds have already shifted. The edge is gone. You got the trade wrong.
 
-Your bot wasn't.
+**This bot closes that gap.**
 
-By 3:47:03 — two seconds after Car's fill hit the chain — your order was already in the queue. Same market. Proportional size. Same direction.
-
-You woke up to a green position and a MongoDB log with 1 new entry.
-
-**That's what this bot does.**
-
----
-
-## Why Car
-
-Car isn't a casual bettor. This is one of Polymarket's most studied wallets — consistently ranked in the top tier across political, sports, and macro event markets.
-
-The edge is public, on-chain, and traceable. This bot converts it into executable signals before you've opened your laptop.
-
-| | |
-|---|---|
-| **Profile** | [Car on Polymarket](https://polymarket.com/@Car?tab=activity) |
-| **Wallet** | `0x7C3Db723F1D4d8cB9C550095203b686cB11E5C6B` |
-| **Network** | Polygon · USDC |
-| **Known for** | High-conviction entries, top leaderboard presence |
+Paste their wallet address. Press run.
+The next time they trade — your order goes in within seconds, automatically, at the right size.
 
 ---
 
-## What $5,000 Looks Like Running This Bot
+## How It Works
 
-> ⚠️ Illustrative only. Based on proportional sizing mechanics — not a performance guarantee. Fill in real numbers from your own run.
-
-Assume Car holds $50,000 USDC and you deploy $5,000.
-
-Your sizing ratio: **10%**. Every trade Car makes, you mirror at 10% of their size.
-
-| Car's Trade | Your Mirrored Position | At 65% win rate | At 55% win rate |
-|---|---|---|---|
-| $10,000 | $1,000 | +$650 avg | +$550 avg |
-| $5,000 | $500 | +$325 avg | +$275 avg |
-| $2,000 | $200 | +$130 avg | +$110 avg |
-
-*Win rate is Car's — your actual rate will be lower due to slippage and latency. This table exists to show the sizing mechanic, not to promise returns.*
-
-**The core math:** more capital deployed = larger absolute positions = larger absolute returns (and larger absolute losses). The bot handles sizing automatically. You control the starting balance.
-
----
-
-## The Bot, Live
-
-While you're working, sleeping, or not watching charts:
+The bot watches any Polymarket wallet you point it at. The moment that wallet executes a trade:
 
 ```
-[03:47:01] Polling Car's wallet...           no new activity
-[03:47:02] Polling Car's wallet...           no new activity
-[03:47:03] Polling Car's wallet...           ── TRADE DETECTED ──
+[02:13:44] Polling target wallet...          no new activity
+[02:13:45] Polling target wallet...          no new activity
+[02:13:46] Polling target wallet...          ── TRADE DETECTED ──
+           Wallet   0xYourTargetWallet...
            Market   Will X happen before Y?
            Side     BUY
-           Size     $4,200
-           Price    0.61
+           Size     $8,500
+           Price    0.44
 
-[03:47:03] Staleness check...                0s old — OK
-[03:47:03] Price drift check...              current 0.62 — within 5% threshold
-[03:47:03] Sizing your position...           $5,000 ÷ $50,000 × $4,200 = $420
-[03:47:04] Submitting order...               FILLED at 0.62
-[03:47:04] Writing to MongoDB...             done ✓
+[02:13:46] Staleness check...                0s old — OK
+[02:13:46] Price drift check...              current 0.45 — within threshold
+[02:13:46] Sizing your position...           $5,000 ÷ $85,000 × $8,500 = $500
+[02:13:47] Submitting order...               FILLED at 0.45
+[02:13:47] Writing to MongoDB...             done ✓
 
-           Entry    0.62
-           Size     $420
-           P&L      open
-
-[03:47:04] Waiting for next signal...
+[02:13:47] Waiting for next signal...
 ```
 
-That loop runs every second. Every hour. Every night you don't feel like watching markets.
+One wallet address in your `.env`. That's all it takes.
+
+---
+
+## Who Are You Following?
+
+This bot works with **any public Polymarket wallet.**
+
+You bring the trader. The bot brings the execution.
+
+Some of the most-watched wallets on Polymarket right now:
+
+| Trader | Profile | Known For |
+|---|---|---|
+| **Car** | [polymarket.com/@Car](https://polymarket.com/@Car?tab=activity) | Top leaderboard, high-conviction sizing |
+| **0x8dxd** | [polymarket.com/@0x8dxd](https://polymarket.com/@0x8dxd?tab=activity) | Highly active, watched by the community |
+| **Your whale** | whoever you've been watching | — |
+
+> Find wallets worth following at [polymarket.com/leaderboard](https://polymarket.com/leaderboard) — sort by profit, filter by market type, pick your signal.
+
+You can follow **multiple wallets at once** by comma-separating addresses in `USER_ADDRESS`.
+
+---
+
+## What $5,000 Looks Like
+
+> Illustrative only — based on the proportional sizing model, not a return guarantee. Your actual fills will differ due to slippage and latency.
+
+Assume your target holds $50,000 USDC. You deploy $5,000. Your sizing ratio: **10%.**
+
+| Target's Trade | Your Position | If they're right | If they're wrong |
+|---|---|---|---|
+| $10,000 | $1,000 | you win proportionally | you lose proportionally |
+| $5,000 | $500 | you win proportionally | you lose proportionally |
+| $2,000 | $200 | you win proportionally | you lose proportionally |
+
+The bot scales every position to your balance automatically. You never overexpose. You never undersize. You just mirror.
 
 ---
 
 ## Capital Deployment Guide
 
-Not all capital is equal. Here's how to think about sizing before you start:
-
-| Deployment Size | Behavior | Recommended for |
+| Your Balance | What to Expect | Recommended Stage |
 |---|---|---|
-| **< $500** | Very small positions — fills may fail on low-liquidity markets | Testing and validation only |
-| **$500 – $2,000** | Functional mirroring — real fills, real data, manageable risk | First month of running |
-| **$2,000 – $5,000** | Meaningful exposure — positions large enough to matter | Confident after 30+ days of logs |
-| **$5,000 – $20,000** | Full proportional parity with Car on most trades | Experienced, with your own PnL data |
-| **> $20,000** | Liquidity risk increases — large orders can move thin markets | Advanced use only |
-
-**Rule of thumb:** only deploy what you'd be comfortable seeing go to zero in a bad month.
+| **< $500** | Very small positions — some may fail on thin markets | Testing only |
+| **$500 – $2,000** | Functional mirroring, real fills, real data | First 30 days |
+| **$2,000 – $5,000** | Meaningful exposure, positions that matter | After reviewing your logs |
+| **$5,000 – $20,000** | Full proportional parity on most trades | With your own PnL data |
+| **> $20,000** | Large orders can move thin markets — use carefully | Advanced only |
 
 ---
 
 ## Execution Guardrails
 
-The bot doesn't blindly chase every signal. Before any order is placed:
+Before any order fires, the bot runs four checks:
 
-| Guard | Threshold | What it prevents |
+| Guard | Threshold | Purpose |
 |---|---|---|
-| **Staleness filter** | 24 hours | Acting on old, irrelevant data |
-| **Price drift gate** | 5% max deviation | Chasing already-moved markets |
-| **Proportional sizing** | Auto-calculated | Overexposure relative to your balance |
-| **Retry cap** | 3 attempts | Infinite loops on failed fills |
-| **Deduplication** | Transaction hash | Double-executing the same trade |
+| **Staleness filter** | 24h max event age | No acting on old data |
+| **Price drift gate** | ≤ 5% from target's fill | No chasing moved markets |
+| **Proportional sizing** | Auto-calculated | No overexposure |
+| **Retry cap** | 3 attempts max | No infinite loops on failures |
+| **Deduplication** | Transaction hash | No double-executing the same trade |
 | **Full audit log** | MongoDB | Every event recorded — nothing hidden |
-
----
-
-## What Others Are Watching
-
-Car's wallet is one of the most observed on Polymarket. These are the kinds of markets where activity has been concentrated — publicly visible on their profile:
-
-- **US political events** — elections, appointments, policy outcomes
-- **Macro & economic** — Fed decisions, inflation prints, GDP calls
-- **Sports & entertainment** — high-liquidity, fast-resolving markets
-- **World events** — geopolitical outcomes with clear resolution criteria
-
-The bot doesn't filter by market type. It mirrors whatever Car trades, whenever they trade it.
 
 ---
 
 ## Five-Minute Setup
 
-**Prerequisites:** Node.js 18+, MongoDB (local or [Atlas free tier](https://mongodb.com/atlas)), funded Polygon wallet with USDC.
+**Prerequisites:** Node.js 18+, MongoDB, funded Polygon wallet with USDC.
 
 ```bash
 # 1. Clone and install
@@ -151,22 +132,26 @@ npm install
 cp env.example .env
 ```
 
-Open `.env` — fill in only three required values to start:
+Open `.env`. Three values to fill in:
 
 ```env
-# ── Already set to Car — do not change ─────────────────────────
-USER_ADDRESS=0x7C3Db723F1D4d8cB9C550095203b686cB11E5C6B
+# ── Who you're following ────────────────────────────────────────
+# Single wallet:
+USER_ADDRESS=0xTargetWalletAddress
+
+# Multiple wallets (comma-separated):
+# USER_ADDRESS=0xWallet1,0xWallet2,0xWallet3
 
 # ── Your wallet ─────────────────────────────────────────────────
 PROXY_WALLET=0xYourWalletAddress
 PRIVATE_KEY=your_private_key_here        # never commit this
 
-# ── Leave defaults unless you know what you're changing ─────────
+# ── Leave these as defaults to start ────────────────────────────
 CLOB_HTTP_URL=https://clob.polymarket.com
 CLOB_WS_URL=wss://clob-ws.polymarket.com
 RPC_URL=https://polygon-rpc.com
 USDC_CONTRACT_ADDRESS=0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174
-MONGO_URI=mongodb://localhost:27017/polymarket_car
+MONGO_URI=mongodb://localhost:27017/polymarket_bot
 FETCH_INTERVAL=1
 TOO_OLD_TIMESTAMP=24
 RETRY_LIMIT=3
@@ -181,31 +166,26 @@ npm run build && npm start
 
 ## Before You Scale Past $1,000
 
-Do these before increasing capital:
-
 - [ ] Watch the first 10–20 trades execute manually in your terminal
-- [ ] Verify MongoDB is logging every detection and fill correctly
-- [ ] Check your actual fill prices vs Car's — measure your real slippage
-- [ ] Set a monthly loss limit you will actually respect
+- [ ] Verify MongoDB is logging every detection and fill
+- [ ] Measure your actual fill prices vs the target's — know your real slippage
+- [ ] Set a monthly loss limit and respect it
 - [ ] Use a dedicated wallet — not your main holdings
-- [ ] Make sure your RPC endpoint is reliable (consider a paid node)
-
-This checklist exists because most people skip it. Don't skip it.
+- [ ] Use a reliable RPC endpoint (consider a paid node for production)
 
 ---
 
-## The Honest Section
-
-Copy trading is not passive income. It is active risk with automated execution.
+## The Honest Part
 
 | What people expect | What actually happens |
 |---|---|
-| "I'll mirror Car's exact returns" | You enter later, at worse prices — returns will be lower |
-| "The bot runs itself" | It needs monitoring, a live RPC, and a running MongoDB |
-| "Profitable traders stay profitable" | Car will have losing months. You will mirror them. |
-| "More capital = more profit" | More capital = more exposure in both directions |
+| "I'll mirror their exact returns" | You enter later, at worse prices — expect lower returns |
+| "Set it and forget it" | It needs a live RPC, running MongoDB, and occasional monitoring |
+| "Good traders stay good" | Every trader has losing months. You will mirror them. |
+| "More capital = more profit" | More capital = larger exposure in both directions |
+| "I can follow 10 wallets at once" | Yes — but position sizing gets more complex across wallets |
 
-**None of this is financial advice. This software is provided for educational purposes. You are fully responsible for your own capital.**
+This software is provided for educational purposes. Not financial advice. Your capital, your responsibility.
 
 ---
 
@@ -215,7 +195,7 @@ Copy trading is not passive income. It is active risk with automated execution.
 src/
 ├── index.ts                   Entry point — env validation + orchestration
 ├── services/
-│   ├── tradeMonitor.ts        Polls wallet, writes new TRADE events to DB
+│   ├── tradeMonitor.ts        Polls target wallets, writes TRADE events to DB
 │   └── tradeExecutor.ts       Reads pending trades, places orders
 ├── utils/
 │   ├── postOrder.ts           Buy / sell / merge order logic
@@ -227,37 +207,24 @@ src/
     └── db.ts                  MongoDB connection handler
 ```
 
-**Stack:** TypeScript (strict) · Node.js · `@polymarket/clob-client` · `ethers` · `mongoose` · `axios` · `ora` · `chalk`
-
----
-
-## Commands
-
-```bash
-npm run dev          # Development — hot reload via ts-node
-npm run build        # Compile TypeScript → dist/
-npm start            # Run compiled build
-npm run lint         # ESLint check
-npm run lint:fix     # ESLint auto-fix
-npm run format       # Prettier format
-```
+**Stack:** TypeScript (strict) · Node.js · `@polymarket/clob-client` · `ethers` · `mongoose` · `axios`
 
 ---
 
 ## Contributing
 
-Run it. Log your results. Open a PR if you've improved execution speed, sizing logic, slippage measurement, or PnL reporting.
+Found a wallet worth following? Improved execution or sizing logic? Added PnL reporting?
 
-The bot gets more useful the more people stress-test it with real capital.
+Open a PR. The more wallets people run this against, the sharper it gets.
 
 ---
 
 <div align="center">
 
-*Car is trading right now.*
-*The only question is whether your bot is running.*
+*Someone you're watching just moved.*
+*The only question is whether your bot caught it.*
 
-**[⭐ Star this repo](https://github.com/LemnLabs/polymarket-trading-bot)** · **[View Car's wallet](https://polymarket.com/@Car?tab=activity)**
+**[⭐ Star this repo](https://github.com/LemnLabs/polymarket-trading-bot)** · **[Find wallets on the leaderboard](https://polymarket.com/leaderboard)**
 
 ISC © [LemnLabs](https://github.com/LemnLabs)
 
