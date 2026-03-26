@@ -17,7 +17,7 @@ You've been watching their wallet for weeks.
 Every market they enter - they're right more than they're wrong.
 You've seen the trades. You've done the math.
 
-The only problem?:
+The only problem?
 
 By the time you notice they moved, open the app, check the price, and place the order -
 the odds have already shifted. The edge is gone. You got the trade wrong.
